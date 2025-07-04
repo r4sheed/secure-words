@@ -23,8 +23,6 @@ import {
   Info,
   CheckCircle,
   Settings,
-  Mail,
-  Globe,
   Github,
 } from "lucide-react"
 import { toast } from 'sonner'
@@ -101,10 +99,28 @@ export default function PasswordGenerator() {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(password)
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(password)
+      } else {
+        // Fallback for insecure context or missing clipboard API
+        const textarea = document.createElement("textarea")
+        textarea.value = password
+        textarea.style.position = "fixed" // Prevent scrolling to bottom
+        textarea.style.opacity = "0"
+        document.body.appendChild(textarea)
+        textarea.focus()
+        textarea.select()
+        try {
+          document.execCommand("copy")
+        } catch (err) {
+          throw new Error("Fallback copy failed. " + err)
+        }
+        document.body.removeChild(textarea)
+      }
       toast.success("Password has been copied to your clipboard.")
     } catch (err) {
       toast.error("Unable to copy password to clipboard.")
+      console.error("Copy failed:", err)
     }
   }
 
@@ -427,8 +443,26 @@ export default function PasswordGenerator() {
                             variant="ghost"
                             size="sm"
                             onClick={() => {
-                              navigator.clipboard.writeText(entry.password)
-                              toast.success("Password copied to clipboard.")
+                              if (navigator.clipboard && window.isSecureContext) {
+                                navigator.clipboard.writeText(entry.password)
+                                toast.success("Password copied to clipboard.")
+                              } else {
+                                const textarea = document.createElement("textarea")
+                                textarea.value = entry.password
+                                textarea.style.position = "fixed"
+                                textarea.style.opacity = "0"
+                                document.body.appendChild(textarea)
+                                textarea.focus()
+                                textarea.select()
+                                try {
+                                  document.execCommand("copy")
+                                  toast.success("Password copied to clipboard.")
+                                } catch (err) {
+                                  toast.error("Unable to copy password to clipboard.")
+                                  console.error("Copy failed:", err)
+                                }
+                                document.body.removeChild(textarea)
+                              }
                             }}
                           >
                             <Copy className="h-4 w-4" />
