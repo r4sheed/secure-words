@@ -20,7 +20,7 @@ export function usePasswordGenerator(options: PasswordOptions) {
 
   // Secure random number generator with fallback
   const getSecureRandom = useCallback((max: number): number => {
-    if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+    if (typeof window !== "undefined" && window.crypto && typeof window.crypto.getRandomValues === "function") {
       const array = new Uint32Array(1)
       crypto.getRandomValues(array)
       return array[0] % max
