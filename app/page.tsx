@@ -567,8 +567,8 @@ export default function PasswordGenerator() {
         </Tabs>
 
         {/* Features */}
-{/*         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="text-center p-4">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+{/*           <Card className="text-center p-4">
             <Shield className="h-8 w-8 mx-auto mb-2 text-blue-600" />
             <h3 className="font-semibold mb-1">Secure</h3>
             <p className="text-sm text-slate-600">Cryptographically secure random generation</p>
@@ -582,8 +582,8 @@ export default function PasswordGenerator() {
             <RefreshCw className="h-8 w-8 mx-auto mb-2 text-purple-600" />
             <h3 className="font-semibold mb-1">Customizable</h3>
             <p className="text-sm text-slate-600">Adjust length and complexity to your needs</p>
-          </Card>
-        </div> */}
+          </Card> */}
+        </div>
       </div>
     </div>
   )
