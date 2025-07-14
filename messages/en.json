@@ -11,6 +11,10 @@
     "history": "History",
     "about": "About"
   },
+  "clipboard": {
+    "copySuccess": "Password has been copied to your clipboard.",
+    "copyFail": "Unable to copy password to clipboard."
+  },
   "generator": {
     "title": "Password Generator",
     "description": "Create strong, memorable passwords using real words",

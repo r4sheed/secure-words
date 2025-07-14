@@ -11,6 +11,10 @@
     "history": "Előzmények",
     "about": "Névjegy"
   },
+  "clipboard": {
+    "copySuccess": "A jelszó sikeresen vágólapra másolva.",
+    "copyFail": "Nem sikerült a jelszót vágólapra másolni."
+  },
   "generator": {
     "title": "Jelszó Generátor",
     "description": "Erős, könnyen megjegyezhető jelszavak valódi szavakkal",

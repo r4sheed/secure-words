@@ -101,7 +101,6 @@ export default function PasswordGenerator() {
   }, [options.wordCount])
 
   const copyToClipboard = async () => {
-    const t = await getTranslations('HomePage');
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(password)
@@ -121,9 +120,9 @@ export default function PasswordGenerator() {
         }
         document.body.removeChild(textarea)
       }
-      toast.success("Password has been copied to your clipboard.")
+      toast.success(t("clipboard.copySuccess"))
     } catch (err) {
-      toast.error("Unable to copy password to clipboard.")
+      toast.error(t("clipboard.copyFail"))
       console.error("Copy failed:", err)
     }
   }
