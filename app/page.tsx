@@ -90,11 +90,6 @@ export default function PasswordGenerator() {
     [options, password, updatePasswordWithOptions],
   )
 
-  // Generate initial password
-  useEffect(() => {
-    handleGenerate()
-  }, [])
-
   // Auto-generate when word count changes
   useEffect(() => {
     handleGenerate()
