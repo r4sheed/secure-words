@@ -1,89 +1,91 @@
 {
-  "app": {
-    "title": "SecureWords",
-    "subtitle": "Generate memorable yet secure passwords using dictionary words",
-    "version": "Version 1.0.0 • Built with",
-    "builtWithNext": "Next.js",
-    "builtWithShadcn": "shadcn/ui"
-  },
-  "tabs": {
-    "generator": "Generator",
-    "history": "History",
-    "about": "About"
-  },
-  "clipboard": {
-    "copySuccess": "Password has been copied to your clipboard.",
-    "copyFail": "Unable to copy password to clipboard."
-  },
-  "generator": {
-    "title": "Password Generator",
-    "description": "Create strong, memorable passwords using real words",
-    "generatedPassword": "Generated Password",
-    "show": "Show",
-    "hide": "Hide",
-    "copy": "Password has been copied to your clipboard.",
-    "copyError": "Unable to copy password to clipboard.",
-    "strength": "Password Strength",
-    "strengthLabels": {
-      "weak": "Weak",
-      "fair": "Fair",
-      "good": "Good",
-      "strong": "Strong"
+  "page": {
+    "app": {
+      "title": "SecureWords",
+      "subtitle": "Generate memorable yet secure passwords using dictionary words",
+      "version": "Version 1.0.0 • Built with",
+      "builtWithNext": "Next.js",
+      "builtWithShadcn": "shadcn/ui"
     },
-    "wordCount": "Number of Words",
-    "wordCountBadge": "{count} words",
-    "wordCountMin": "2 words",
-    "wordCountMax": "4 words",
-    "capitalLetters": "Capital Letters",
-    "capitalLettersDesc": "Capitalize first letter of each word",
-    "includeNumbers": "Include Numbers",
-    "includeNumbersDesc": "Add random numbers within words",
-    "showAdvancedOptions": "Show Advanced Options",
-    "hideAdvancedOptions": "Hide Advanced Options",
-    "wordCategory": "Word Category",
-    "wordCategoryOptions": {
-      "mixed": "Mixed (Recommended)",
-      "common": "Common Words",
-      "nature": "Nature & Animals",
-      "technology": "Technology",
-      "abstract": "Abstract Concepts"
+    "tabs": {
+      "generator": "Generator",
+      "history": "History",
+      "about": "About"
     },
-    "minWordLength": "Min Word Length",
-    "maxWordLength": "Max Word Length",
-    "numberDensity": "Number Density",
-    "numberDensityDesc": "{percent}% of words will contain numbers",
-    "avoidSimilarWords": "Avoid Similar Words",
-    "avoidSimilarWordsDesc": "Prevent phonetically similar words",
-    "generate": "Generate New Password",
-    "generating": "Generating...",
-    "localGeneration": "Passwords are generated locally and never stored or transmitted.",
-    "usingWords": "Using {count} carefully selected dictionary words.",
-    "characters": "characters",
-    "numbersInWords": "of words contain numbers"
-  },
-  "history": {
-    "title": "Password History",
-    "description": "Your recently generated passwords",
-    "export": "Export",
-    "clear": "Clear All",
-    "empty": "No passwords generated yet",
-    "emptyDesc": "Generated passwords will appear here",
-    "copy": "Password copied to clipboard."
-  },
-  "about": {
-    "title": "About SecureWords",
-    "description": "Professional password generator for secure, memorable passwords",
-    "securityInfo": "Security Information",
-    "passwordsGenerated": "Passwords generated:",
-    "availableWords": "Available words:",
-    "wordRange": "Word range:",
-    "privacy": "Privacy & Security",
-    "local": "Generated locally",
-    "noData": "No data transmitted",
-    "cryptoSecure": "Cryptographically secure",
-    "noDeps": "No external dependencies",
-    "aboutText": "A professional password generator that creates memorable yet secure passwords using dictionary words. Perfect balance between security and usability.",
-    "contact": "Contact & Support",
-    "github": "GitHub"
+    "clipboard": {
+      "copySuccess": "Password has been copied to your clipboard.",
+      "copyFail": "Unable to copy password to clipboard."
+    },
+    "generator": {
+      "title": "Password Generator",
+      "description": "Create strong, memorable passwords using real words",
+      "generatedPassword": "Generated Password",
+      "show": "Show",
+      "hide": "Hide",
+      "copy": "Password has been copied to your clipboard.",
+      "copyError": "Unable to copy password to clipboard.",
+      "strength": "Password Strength",
+      "strengthLabels": {
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong"
+      },
+      "wordCount": "Number of Words",
+      "wordCountBadge": "{count} words",
+      "wordCountMin": "2 words",
+      "wordCountMax": "4 words",
+      "capitalLetters": "Capital Letters",
+      "capitalLettersDesc": "Capitalize first letter of each word",
+      "includeNumbers": "Include Numbers",
+      "includeNumbersDesc": "Add random numbers within words",
+      "showAdvancedOptions": "Show Advanced Options",
+      "hideAdvancedOptions": "Hide Advanced Options",
+      "wordCategory": "Word Category",
+      "wordCategoryOptions": {
+        "mixed": "Mixed (Recommended)",
+        "common": "Common Words",
+        "nature": "Nature & Animals",
+        "technology": "Technology",
+        "abstract": "Abstract Concepts"
+      },
+      "minWordLength": "Min Word Length",
+      "maxWordLength": "Max Word Length",
+      "numberDensity": "Number Density",
+      "numberDensityDesc": "{percent}% of words will contain numbers",
+      "avoidSimilarWords": "Avoid Similar Words",
+      "avoidSimilarWordsDesc": "Prevent phonetically similar words",
+      "generate": "Generate New Password",
+      "generating": "Generating...",
+      "localGeneration": "Passwords are generated locally and never stored or transmitted.",
+      "usingWords": "Using {count} carefully selected dictionary words.",
+      "characters": "characters",
+      "numbersInWords": "of words contain numbers"
+    },
+    "history": {
+      "title": "Password History",
+      "description": "Your recently generated passwords",
+      "export": "Export",
+      "clear": "Clear All",
+      "empty": "No passwords generated yet",
+      "emptyDesc": "Generated passwords will appear here",
+      "copy": "Password copied to clipboard."
+    },
+    "about": {
+      "title": "About SecureWords",
+      "description": "Professional password generator for secure, memorable passwords",
+      "securityInfo": "Security Information",
+      "passwordsGenerated": "Passwords generated:",
+      "availableWords": "Available words:",
+      "wordRange": "Word range:",
+      "privacy": "Privacy & Security",
+      "local": "Generated locally",
+      "noData": "No data transmitted",
+      "cryptoSecure": "Cryptographically secure",
+      "noDeps": "No external dependencies",
+      "aboutText": "A professional password generator that creates memorable yet secure passwords using dictionary words. Perfect balance between security and usability.",
+      "contact": "Contact & Support",
+      "github": "GitHub"
+    }
   }
 }

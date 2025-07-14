@@ -1,89 +1,91 @@
 {
-  "app": {
-    "title": "SecureWords",
-    "subtitle": "Emlékezetes, mégis biztonságos jelszavak generálása szótári szavakból",
-    "version": "Verzió 1.0.0 • Készült ezzel:",
-    "builtWithNext": "Next.js",
-    "builtWithShadcn": "shadcn/ui"
-  },
-  "tabs": {
-    "generator": "Generátor",
-    "history": "Előzmények",
-    "about": "Névjegy"
-  },
-  "clipboard": {
-    "copySuccess": "A jelszó sikeresen vágólapra másolva.",
-    "copyFail": "Nem sikerült a jelszót vágólapra másolni."
-  },
-  "generator": {
-    "title": "Jelszó Generátor",
-    "description": "Erős, könnyen megjegyezhető jelszavak valódi szavakkal",
-    "generatedPassword": "Generált jelszó",
-    "show": "Mutat",
-    "hide": "Elrejt",
-    "copy": "A jelszó a vágólapra másolva.",
-    "copyError": "Nem sikerült a jelszót a vágólapra másolni.",
-    "strength": "Jelszó erőssége",
-    "strengthLabels": {
-      "weak": "Gyenge",
-      "fair": "Közepes",
-      "good": "Jó",
-      "strong": "Erős"
+  "page": {
+    "app": {
+      "title": "SecureWords",
+      "subtitle": "Emlékezetes, mégis biztonságos jelszavak generálása szótári szavakból",
+      "version": "Verzió 1.0.0 • Készült ezzel:",
+      "builtWithNext": "Next.js",
+      "builtWithShadcn": "shadcn/ui"
     },
-    "wordCount": "Szavak száma",
-    "wordCountBadge": "{count} szó",
-    "wordCountMin": "2 szó",
-    "wordCountMax": "4 szó",
-    "capitalLetters": "Nagy kezdőbetűk",
-    "capitalLettersDesc": "Minden szó első betűje nagy lesz",
-    "includeNumbers": "Számok hozzáadása",
-    "includeNumbersDesc": "Véletlenszerű számok a szavakban",
-    "showAdvancedOptions": "Speciális beállítások megjelenítése",
-    "hideAdvancedOptions": "Speciális beállítások elrejtése",
-    "wordCategory": "Szókategória",
-    "wordCategoryOptions": {
-      "mixed": "Vegyes (ajánlott)",
-      "common": "Gyakori szavak",
-      "nature": "Természet és állatok",
-      "technology": "Technológia",
-      "abstract": "Absztrakt fogalmak"
+    "tabs": {
+      "generator": "Generátor",
+      "history": "Előzmények",
+      "about": "Névjegy"
     },
-    "minWordLength": "Minimális szóhossz",
-    "maxWordLength": "Maximális szóhossz",
-    "numberDensity": "Szám sűrűsége",
-    "numberDensityDesc": "A szavak {percent}%-a tartalmaz számot",
-    "avoidSimilarWords": "Hasonló szavak elkerülése",
-    "avoidSimilarWordsDesc": "Hasonló hangzású szavak kizárása",
-    "generate": "Új jelszó generálása",
-    "generating": "Generálás...",
-    "localGeneration": "A jelszavak helyben generálódnak, nem kerülnek tárolásra vagy továbbításra.",
-    "usingWords": "{count} gondosan válogatott szót használ.",
-    "characters": "karakter",
-    "numbersInWords": "a szavak tartalmaznak számot"
-  },
-  "history": {
-    "title": "Jelszó előzmények",
-    "description": "Legutóbb generált jelszavaid",
-    "export": "Exportálás",
-    "clear": "Összes törlése",
-    "empty": "Még nem generáltál jelszót",
-    "emptyDesc": "A generált jelszavak itt jelennek meg",
-    "copy": "Jelszó a vágólapra másolva."
-  },
-  "about": {
-    "title": "A SecureWords-ról",
-    "description": "Professzionális jelszó generátor biztonságos, könnyen megjegyezhető jelszavakhoz",
-    "securityInfo": "Biztonsági információk",
-    "passwordsGenerated": "Generált jelszavak:",
-    "availableWords": "Elérhető szavak:",
-    "wordRange": "Szóhossz tartomány:",
-    "privacy": "Adatvédelem és biztonság",
-    "local": "Helyben generált",
-    "noData": "Nincs adatátvitel",
-    "cryptoSecure": "Kriptográfiailag biztonságos",
-    "noDeps": "Nincs külső függőség",
-    "aboutText": "Professzionális jelszó generátor, amely emlékezetes, mégis biztonságos jelszavakat hoz létre szótári szavakból. Tökéletes egyensúly a biztonság és a használhatóság között.",
-    "contact": "Kapcsolat és támogatás",
-    "github": "GitHub"
+    "clipboard": {
+      "copySuccess": "A jelszó sikeresen vágólapra másolva.",
+      "copyFail": "Nem sikerült a jelszót vágólapra másolni."
+    },
+    "generator": {
+      "title": "Jelszó Generátor",
+      "description": "Erős, könnyen megjegyezhető jelszavak valódi szavakkal",
+      "generatedPassword": "Generált jelszó",
+      "show": "Mutat",
+      "hide": "Elrejt",
+      "copy": "A jelszó a vágólapra másolva.",
+      "copyError": "Nem sikerült a jelszót a vágólapra másolni.",
+      "strength": "Jelszó erőssége",
+      "strengthLabels": {
+        "weak": "Gyenge",
+        "fair": "Közepes",
+        "good": "Jó",
+        "strong": "Erős"
+      },
+      "wordCount": "Szavak száma",
+      "wordCountBadge": "{count} szó",
+      "wordCountMin": "2 szó",
+      "wordCountMax": "4 szó",
+      "capitalLetters": "Nagy kezdőbetűk",
+      "capitalLettersDesc": "Minden szó első betűje nagy lesz",
+      "includeNumbers": "Számok hozzáadása",
+      "includeNumbersDesc": "Véletlenszerű számok a szavakban",
+      "showAdvancedOptions": "Speciális beállítások megjelenítése",
+      "hideAdvancedOptions": "Speciális beállítások elrejtése",
+      "wordCategory": "Szókategória",
+      "wordCategoryOptions": {
+        "mixed": "Vegyes (ajánlott)",
+        "common": "Gyakori szavak",
+        "nature": "Természet és állatok",
+        "technology": "Technológia",
+        "abstract": "Absztrakt fogalmak"
+      },
+      "minWordLength": "Minimális szóhossz",
+      "maxWordLength": "Maximális szóhossz",
+      "numberDensity": "Szám sűrűsége",
+      "numberDensityDesc": "A szavak {percent}%-a tartalmaz számot",
+      "avoidSimilarWords": "Hasonló szavak elkerülése",
+      "avoidSimilarWordsDesc": "Hasonló hangzású szavak kizárása",
+      "generate": "Új jelszó generálása",
+      "generating": "Generálás...",
+      "localGeneration": "A jelszavak helyben generálódnak, nem kerülnek tárolásra vagy továbbításra.",
+      "usingWords": "{count} gondosan válogatott szót használ.",
+      "characters": "karakter",
+      "numbersInWords": "a szavak tartalmaznak számot"
+    },
+    "history": {
+      "title": "Jelszó előzmények",
+      "description": "Legutóbb generált jelszavaid",
+      "export": "Exportálás",
+      "clear": "Összes törlése",
+      "empty": "Még nem generáltál jelszót",
+      "emptyDesc": "A generált jelszavak itt jelennek meg",
+      "copy": "Jelszó a vágólapra másolva."
+    },
+    "about": {
+      "title": "A SecureWords-ról",
+      "description": "Professzionális jelszó generátor biztonságos, könnyen megjegyezhető jelszavakhoz",
+      "securityInfo": "Biztonsági információk",
+      "passwordsGenerated": "Generált jelszavak:",
+      "availableWords": "Elérhető szavak:",
+      "wordRange": "Szóhossz tartomány:",
+      "privacy": "Adatvédelem és biztonság",
+      "local": "Helyben generált",
+      "noData": "Nincs adatátvitel",
+      "cryptoSecure": "Kriptográfiailag biztonságos",
+      "noDeps": "Nincs külső függőség",
+      "aboutText": "Professzionális jelszó generátor, amely emlékezetes, mégis biztonságos jelszavakat hoz létre szótári szavakból. Tökéletes egyensúly a biztonság és a használhatóság között.",
+      "contact": "Kapcsolat és támogatás",
+      "github": "GitHub"
+    }
   }
 }

@@ -45,7 +45,7 @@ interface PasswordOptions {
 }
 
 export default function PasswordGenerator() {
-  const t = useTranslations();
+  const t = useTranslations("page");
   const [options, setOptions] = useState<PasswordOptions>({
     wordCount: 3,
     includeCapitals: true,
@@ -115,9 +115,9 @@ export default function PasswordGenerator() {
         }
         document.body.removeChild(textarea)
       }
-      toast.success(t("clipboard.copySuccess"))
+      toast.success(t('clipboard.copySuccess'))
     } catch (err) {
-      toast.error(t("clipboard.copyFail"))
+      toast.error(t('clipboard.copyFail'))
       console.error("Copy failed:", err)
     }
   }
