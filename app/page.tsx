@@ -130,8 +130,7 @@ export default function PasswordGenerator() {
   const exportPasswords = () => {
     const data = {
       passwords: history,
-      exportDate: new Date().toISOString(),
-      generator: "SecureWords Pro",
+      exportDate: new Date().toISOString()
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
