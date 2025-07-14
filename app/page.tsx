@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { Button } from "@/components/ui/button"
@@ -28,6 +27,7 @@ import {
   Github,
 } from "lucide-react"
 import { toast } from 'sonner'
+import { defaultLocale } from "@/i18n/config";
 import { usePasswordGenerator } from "@/hooks/use-password-generator"
 import { usePasswordHistory } from "@/hooks/use-password-history"
 import { WORD_CATEGORIES, type WordCategory } from "@/lib/word-lists"
@@ -385,7 +385,7 @@ export default function PasswordGenerator() {
                 {/* Info */}
                 <div className="text-center text-sm text-slate-500 space-y-1">
                   <p>{t('generator.localGeneration')}</p>
-                  <p>{t('generator.usingWords', { count: WORD_CATEGORIES[options.wordCategory].length })}</p>
+                  <p>{t('generator.usingWords', { count: WORD_CATEGORIES[defaultLocale][options.wordCategory].length })}</p>
                 </div>
               </CardContent>
             </Card>
@@ -493,7 +493,7 @@ export default function PasswordGenerator() {
                       </div>
                       <div className="flex justify-between">
                         <span>{t('about.availableWords')}</span>
-                        <span className="font-mono">{WORD_CATEGORIES[options.wordCategory].length}</span>
+                        <span className="font-mono">{WORD_CATEGORIES[defaultLocale][options.wordCategory].length}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t('about.wordRange')}</span>

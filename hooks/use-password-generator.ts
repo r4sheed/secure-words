@@ -1,7 +1,12 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { defaultLocale } from "@/i18n/config";
 import { WORD_CATEGORIES, type WordCategory } from "@/lib/word-lists"
+
+// Normalize accents for consistent comparison
+const normalize = (word: string): string =>
+  word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
 
 interface PasswordOptions {
   wordCount: number
@@ -31,16 +36,16 @@ export function usePasswordGenerator(options: PasswordOptions) {
 
   // Get filtered word list based on options
   const getFilteredWords = useCallback((opts: PasswordOptions): string[] => {
-    const words = WORD_CATEGORIES[opts.wordCategory]
-    return words.filter((word) => word.length >= opts.minWordLength && word.length <= opts.maxWordLength)
+    const words = WORD_CATEGORIES[defaultLocale][opts.wordCategory]
+    const normalizedWords = words.map(normalize)
+    return normalizedWords.filter((word) => word.length >= opts.minWordLength && word.length <= opts.maxWordLength)
   }, [])
 
-  // Check if words are phonetically similar (basic implementation)
-  const areSimilar = useCallback((word1: string, word2: string, opts: PasswordOptions): boolean => {
-    if (!opts.avoidSimilarWords) return false
-
     // Simple similarity check based on first 2 characters and length
-    return word1.substring(0, 2) === word2.substring(0, 2) && Math.abs(word1.length - word2.length) <= 1
+    const areSimilar = useCallback((word1: string, word2: string, opts: PasswordOptions): boolean => {
+      if (!opts.avoidSimilarWords) return false
+
+      return word1.substring(0, 2) === word2.substring(0, 2) && Math.abs(word1.length - word2.length) <= 1
   }, [])
 
   // Get random words with similarity checking
