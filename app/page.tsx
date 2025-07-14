@@ -1,6 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -43,6 +45,7 @@ interface PasswordOptions {
 }
 
 export default function PasswordGenerator() {
+  const t = useTranslations();
   const [options, setOptions] = useState<PasswordOptions>({
     wordCount: 3,
     includeCapitals: true,
@@ -98,6 +101,7 @@ export default function PasswordGenerator() {
   }, [options.wordCount])
 
   const copyToClipboard = async () => {
+    const t = await getTranslations('HomePage');
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(password)
@@ -160,16 +164,16 @@ export default function PasswordGenerator() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Shield className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-slate-900">SecureWords</h1>
+            <h1 className="text-3xl font-bold text-slate-900">{t('app.title')}</h1>
           </div>
-          <p className="text-slate-600 text-lg">Generate memorable yet secure passwords using dictionary words</p>
+          <p className="text-slate-600 text-lg">{t('app.subtitle')}</p>
         </div>
 
         <Tabs defaultValue="generator" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="generator">Generator</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
+            <TabsTrigger value="generator">{t('tabs.generator')}</TabsTrigger>
+            <TabsTrigger value="history">{t('tabs.history')}</TabsTrigger>
+            <TabsTrigger value="about">{t('tabs.about')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="generator" className="space-y-6">
@@ -177,14 +181,14 @@ export default function PasswordGenerator() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5" />
-                  Password Generator
+                  {t('generator.title')}
                 </CardTitle>
-                <CardDescription>Create strong, memorable passwords using real words</CardDescription>
+                <CardDescription>{t('generator.description')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Generated Password Display */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium">Generated Password</Label>
+                  <Label className="text-sm font-medium">{t('generator.generatedPassword')}</Label>
                   <div className="relative">
                     <div className="flex items-center gap-2 p-4 bg-slate-50 rounded-lg border-2 border-slate-200">
                       <code className="flex-1 text-lg font-mono break-all">
@@ -203,12 +207,12 @@ export default function PasswordGenerator() {
                   {passwordAnalysis && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-sm">Password Strength</Label>
+                        <Label className="text-sm">{t('generator.strength')}</Label>
                         <Badge
                           variant="secondary"
                           className={`${getStrengthColor(passwordAnalysis.complexity.score)} text-white`}
                         >
-                          {getStrengthLabel(passwordAnalysis.complexity.score)}
+                          {t(`generator.strengthLabels.${getStrengthLabel(passwordAnalysis.complexity.score).toLowerCase()}`)}
                         </Badge>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2">
@@ -228,8 +232,8 @@ export default function PasswordGenerator() {
                   {/* Word Count Slider */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">Number of Words</Label>
-                      <Badge variant="outline">{options.wordCount} words</Badge>
+                      <Label className="text-sm font-medium">{t('generator.wordCount')}</Label>
+                      <Badge variant="secondary">{t('generator.wordCountBadge', { count: options.wordCount })}</Badge>
                     </div>
                     <Slider
                       value={[options.wordCount]}
@@ -240,8 +244,8 @@ export default function PasswordGenerator() {
                       className="w-full"
                     />
                     <div className="flex justify-between text-xs text-slate-500">
-                      <span>2 words</span>
-                      <span>4 words</span>
+                      <span>{t('generator.wordCountMin')}</span>
+                      <span>{t('generator.wordCountMax')}</span>
                     </div>
                   </div>
 
@@ -249,8 +253,8 @@ export default function PasswordGenerator() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="space-y-1">
-                        <Label className="text-sm font-medium">Capital Letters</Label>
-                        <p className="text-xs text-slate-500">Capitalize first letter of each word</p>
+                        <Label className="text-sm font-medium">{t('generator.capitalLetters')}</Label>
+                        <p className="text-xs text-slate-500">{t('generator.capitalLettersDesc')}</p>
                       </div>
                       <Switch
                         checked={options.includeCapitals}
@@ -260,8 +264,8 @@ export default function PasswordGenerator() {
 
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="space-y-1">
-                        <Label className="text-sm font-medium">Include Numbers</Label>
-                        <p className="text-xs text-slate-500">Add random numbers within words</p>
+                        <Label className="text-sm font-medium">{t('generator.includeNumbers')}</Label>
+                        <p className="text-xs text-slate-500">{t('generator.includeNumbersDesc')}</p>
                       </div>
                       <Switch
                         checked={options.includeNumbers}
@@ -278,7 +282,7 @@ export default function PasswordGenerator() {
                       className="flex items-center gap-2"
                     >
                       <Settings className="h-4 w-4" />
-                      {showAdvanced ? "Hide" : "Show"} Advanced Options
+                      {showAdvanced ? t('generator.hideAdvancedOptions') : t('generator.showAdvancedOptions')}
                     </Button>
                   </div>
 
@@ -288,7 +292,7 @@ export default function PasswordGenerator() {
                       <div className="space-y-4">
                         {/* Word Category */}
                         <div className="space-y-2">
-                          <Label className="text-sm font-medium">Word Category</Label>
+                          <Label className="text-sm font-medium">{t('generator.wordCategory')}</Label>
                           <Select
                             value={options.wordCategory}
                             onValueChange={(value: WordCategory) => handleOptionsChange({ wordCategory: value })}
@@ -297,11 +301,11 @@ export default function PasswordGenerator() {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="mixed">Mixed (Recommended)</SelectItem>
-                              <SelectItem value="common">Common Words</SelectItem>
-                              <SelectItem value="nature">Nature & Animals</SelectItem>
-                              <SelectItem value="technology">Technology</SelectItem>
-                              <SelectItem value="abstract">Abstract Concepts</SelectItem>
+                              <SelectItem value="mixed">{t('generator.wordCategoryOptions.mixed')}</SelectItem>
+                              <SelectItem value="common">{t('generator.wordCategoryOptions.common')}</SelectItem>
+                              <SelectItem value="nature">{t('generator.wordCategoryOptions.nature')}</SelectItem>
+                              <SelectItem value="technology">{t('generator.wordCategoryOptions.technology')}</SelectItem>
+                              <SelectItem value="abstract">{t('generator.wordCategoryOptions.abstract')}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -309,7 +313,7 @@ export default function PasswordGenerator() {
                         {/* Word Length Range */}
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium">Min Word Length</Label>
+                            <Label className="text-sm font-medium">{t('generator.minWordLength')}</Label>
                             <Slider
                               value={[options.minWordLength]}
                               onValueChange={(value) => handleOptionsChange({ minWordLength: value[0] })}
@@ -317,10 +321,10 @@ export default function PasswordGenerator() {
                               max={8}
                               step={1}
                             />
-                            <div className="text-xs text-slate-500">{options.minWordLength} characters</div>
+                            <div className="text-xs text-slate-500">{options.minWordLength} {t('generator.characters')}</div>
                           </div>
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium">Max Word Length</Label>
+                            <Label className="text-sm font-medium">{t('generator.maxWordLength')}</Label>
                             <Slider
                               value={[options.maxWordLength]}
                               onValueChange={(value) => handleOptionsChange({ maxWordLength: value[0] })}
@@ -328,14 +332,14 @@ export default function PasswordGenerator() {
                               max={15}
                               step={1}
                             />
-                            <div className="text-xs text-slate-500">{options.maxWordLength} characters</div>
+                            <div className="text-xs text-slate-500">{options.maxWordLength} {t('generator.characters')}</div>
                           </div>
                         </div>
 
                         {/* Number Density */}
                         {options.includeNumbers && (
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium">Number Density</Label>
+                            <Label className="text-sm font-medium">{t('generator.numberDensity')}</Label>
                             <Slider
                               value={[options.numberDensity * 100]}
                               onValueChange={(value) => handleOptionsChange({ numberDensity: value[0] / 100 })}
@@ -344,7 +348,7 @@ export default function PasswordGenerator() {
                               step={10}
                             />
                             <div className="text-xs text-slate-500">
-                              {Math.round(options.numberDensity * 100)}% of words will contain numbers
+                              {Math.round(options.numberDensity * 100)}% {t('generator.numbersInWords')}
                             </div>
                           </div>
                         )}
@@ -352,8 +356,8 @@ export default function PasswordGenerator() {
                         {/* Additional Options */}
                         <div className="flex items-center justify-between p-3 border rounded-lg">
                           <div className="space-y-1">
-                            <Label className="text-sm font-medium">Avoid Similar Words</Label>
-                            <p className="text-xs text-slate-500">Prevent phonetically similar words</p>
+                            <Label className="text-sm font-medium">{t('generator.avoidSimilarWords')}</Label>
+                            <p className="text-xs text-slate-500">{t('generator.avoidSimilarWordsDesc')}</p>
                           </div>
                           <Switch
                             checked={options.avoidSimilarWords}
@@ -375,20 +379,20 @@ export default function PasswordGenerator() {
                   {isGenerating ? (
                     <>
                       <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
-                      Generating...
+                      {t('generator.generating')}
                     </>
                   ) : (
                     <>
                       <RefreshCw className="h-5 w-5 mr-2" />
-                      Generate New Password
+                      {t('generator.generate')}
                     </>
                   )}
                 </Button>
 
                 {/* Info */}
                 <div className="text-center text-sm text-slate-500 space-y-1">
-                  <p>Passwords are generated locally and never stored or transmitted.</p>
-                  <p>Using {WORD_CATEGORIES[options.wordCategory].length} carefully selected dictionary words.</p>
+                  <p>{t('generator.localGeneration')}</p>
+                  <p>{t('generator.usingWords', { count: WORD_CATEGORIES[options.wordCategory].length })}</p>
                 </div>
               </CardContent>
             </Card>
@@ -401,17 +405,17 @@ export default function PasswordGenerator() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <History className="h-5 w-5" />
-                      Password History
+                      {t('history.title')}
                     </CardTitle>
-                    <CardDescription>Your recently generated passwords</CardDescription>
+                    <CardDescription>{t('history.description')}</CardDescription>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="outline" onClick={exportPasswords} disabled={history.length === 0}>
                       <Download className="h-4 w-4 mr-2" />
-                      Export
+                      {t('history.export')}
                     </Button>
                     <Button variant="outline" onClick={clearHistory} disabled={history.length === 0}>
-                      Clear All
+                      {t('history.clear')}
                     </Button>
                   </div>
                 </div>
@@ -420,8 +424,8 @@ export default function PasswordGenerator() {
                 {history.length === 0 ? (
                   <div className="text-center py-8 text-slate-500">
                     <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No passwords generated yet</p>
-                    <p className="text-sm">Generated passwords will appear here</p>
+                    <p>{t('history.empty')}</p>
+                    <p className="text-sm">{t('history.emptyDesc')}</p>
                   </div>
                 ) : (
                   <ScrollArea className="h-[400px] w-full">
@@ -434,9 +438,9 @@ export default function PasswordGenerator() {
                           <div className="flex-1">
                             <code className="text-sm font-mono">{entry.password}</code>
                             <div className="text-xs text-slate-500 mt-1">
-                              {entry.timestamp.toLocaleString()} • {entry.options.wordCount} words
-                              {entry.options.includeCapitals && " • Capitals"}
-                              {entry.options.includeNumbers && " • Numbers"}
+                              {entry.timestamp.toLocaleString()} • {t('generator.wordCountBadge', { count: entry.options.wordCount })}
+                              {entry.options.includeCapitals && ` • ${t('generator.capitalLetters')}`}
+                              {entry.options.includeNumbers && ` • ${t('generator.includeNumbers')}`}
                             </div>
                           </div>
                           <Button
@@ -445,7 +449,7 @@ export default function PasswordGenerator() {
                             onClick={() => {
                               if (navigator.clipboard && window.isSecureContext) {
                                 navigator.clipboard.writeText(entry.password)
-                                toast.success("Password copied to clipboard.")
+                                toast.success(t('history.copy'))
                               } else {
                                 const textarea = document.createElement("textarea")
                                 textarea.value = entry.password
@@ -456,9 +460,9 @@ export default function PasswordGenerator() {
                                 textarea.select()
                                 try {
                                   document.execCommand("copy")
-                                  toast.success("Password copied to clipboard.")
+                                  toast.success(t('history.copy'))
                                 } catch (err) {
-                                  toast.error("Unable to copy password to clipboard.")
+                                  toast.error(t('history.copyError'))
                                   console.error("Copy failed:", err)
                                 }
                                 document.body.removeChild(textarea)
@@ -481,50 +485,50 @@ export default function PasswordGenerator() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Info className="h-5 w-5" />
-                  About SecureWords
+                  {t('about.title')}
                 </CardTitle>
-                <CardDescription>Professional password generator for secure, memorable passwords</CardDescription>
+                <CardDescription>{t('about.description')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Card className="p-4">
-                    <h3 className="font-semibold mb-3">Security Information</h3>
+                    <h3 className="font-semibold mb-3">{t('about.securityInfo')}</h3>
                     <div className="space-y-2 text-sm text-slate-600">
                       <div className="flex justify-between">
-                        <span>Passwords generated:</span>
+                        <span>{t('about.passwordsGenerated')}</span>
                         <span className="font-mono">{history.length}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Available words:</span>
+                        <span>{t('about.availableWords')}</span>
                         <span className="font-mono">{WORD_CATEGORIES[options.wordCategory].length}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Word range:</span>
+                        <span>{t('about.wordRange')}</span>
                         <span className="font-mono">
-                          {options.minWordLength}-{options.maxWordLength} chars
+                          {options.minWordLength}-{options.maxWordLength} {t('generator.wordCountBadge', { count: '' }).replace('{count} ', '')}
                         </span>
                       </div>
                     </div>
                   </Card>
 
                   <Card className="p-4">
-                    <h3 className="font-semibold mb-3">Privacy & Security</h3>
+                    <h3 className="font-semibold mb-3">{t('about.privacy')}</h3>
                     <div className="space-y-2 text-sm text-slate-600">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span>Generated locally</span>
+                        <span>{t('about.local')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span>No data transmitted</span>
+                        <span>{t('about.noData')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span>Cryptographically secure</span>
+                        <span>{t('about.cryptoSecure')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span>No external dependencies</span>
+                        <span>{t('about.noDeps')}</span>
                       </div>
                     </div>
                   </Card>
@@ -534,20 +538,14 @@ export default function PasswordGenerator() {
 
                 <div className="text-center space-y-4">
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">SecureWords</h3>
+                    <h3 className="font-semibold text-lg mb-2">{t('about.title')}</h3>
                     <p className="text-sm text-slate-600 max-w-md mx-auto">
-                      A professional password generator that creates memorable yet secure passwords using dictionary
-                      words. Perfect balance between security and usability.
+                      {t('about.aboutText')}
                     </p>
                   </div>
-
                   <div className="space-y-3">
-                    <h4 className="font-semibold">Contact & Support</h4>
+                    <h4 className="font-semibold">{t('about.contact')}</h4>
                     <div className="flex justify-center gap-6">
-                      {/* <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Mail className="h-4 w-4" />
-                        <span>support@example.com</span>
-                      </div> */}
                       <div className="flex items-center gap-2 text-sm text-slate-600">
                         <Github className="h-4 w-4" />
                         <span>
@@ -557,7 +555,7 @@ export default function PasswordGenerator() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            GitHub
+                            {t('about.github')}
                           </Link>
                         </span>
                       </div>
@@ -566,24 +564,7 @@ export default function PasswordGenerator() {
 
                   <div className="pt-4 border-t">
                     <p className="text-xs text-slate-500">
-                      Version 1.0.0 • Built with {" "}
-                      <Link
-                        href="https://nextjs.org/"
-                        className="underline underline-offset-2 hover:text-blue-600 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Next.js
-                      </Link>
-                      {" "} &{" "}
-                      <Link
-                        href="https://ui.shadcn.com/"
-                        className="underline underline-offset-2 hover:text-blue-600 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        shadcn/ui
-                      </Link>
+                      {t('app.version')} {t('app.builtWithNext')} & {t('app.builtWithShadcn')}
                     </p>
                   </div>
                 </div>
