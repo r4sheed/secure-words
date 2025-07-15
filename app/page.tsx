@@ -31,16 +31,17 @@ import { defaultLocale } from "@/i18n/config";
 import { usePasswordGenerator } from "@/hooks/use-password-generator"
 import { usePasswordHistory } from "@/hooks/use-password-history"
 import { WORD_CATEGORIES, type WordCategory } from "@/lib/word-lists"
-import { getPasswordComplexity } from "@/lib/password-analysis"
+import { getPasswordComplexity, getStrengthColor, getStrengthWidth } from "@/lib/password-analysis"
 
 interface PasswordOptions {
   wordCount: number
   includeCapitals: boolean
   includeNumbers: boolean
+  includeSpecials: boolean
   wordCategory: WordCategory
   minWordLength: number
   maxWordLength: number
-  numberDensity: number
+  characterDensity: number
   avoidSimilarWords: boolean
 }
 
@@ -50,10 +51,11 @@ export default function PasswordGenerator() {
     wordCount: 3,
     includeCapitals: true,
     includeNumbers: true,
+    includeSpecials: false,
     wordCategory: "mixed",
     minWordLength: 5,
     maxWordLength: 12,
-    numberDensity: 0.7,
+    characterDensity: 0.7,
     avoidSimilarWords: true,
   })
 
@@ -136,20 +138,6 @@ export default function PasswordGenerator() {
     URL.revokeObjectURL(url)
   }
 
-  const getStrengthColor = (strength: number) => {
-    if (strength < 30) return "bg-red-500"
-    if (strength < 60) return "bg-yellow-500"
-    if (strength < 80) return "bg-blue-500"
-    return "bg-green-500"
-  }
-
-  const getStrengthLabel = (strength: number) => {
-    if (strength < 30) return "Weak"
-    if (strength < 60) return "Fair"
-    if (strength < 80) return "Good"
-    return "Strong"
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
       <div className="max-w-2xl mx-auto pt-8">
@@ -203,17 +191,25 @@ export default function PasswordGenerator() {
                         <Label className="text-sm">{t('generator.strength')}</Label>
                         <Badge
                           variant="secondary"
-                          className={`${getStrengthColor(passwordAnalysis.complexity.score)} text-white`}
+                          className={`${getStrengthColor(passwordAnalysis.complexity.level)} text-white`}
                         >
-                          {t(`generator.strengthLabels.${getStrengthLabel(passwordAnalysis.complexity.score).toLowerCase()}`)}
+                          {t(`generator.strengthLabels.${(passwordAnalysis.complexity.level).toLowerCase()}`)}
                         </Badge>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(passwordAnalysis.complexity.score)}`}
-                          style={{ width: `${passwordAnalysis.complexity.score}%` }}
+                          className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(passwordAnalysis.complexity.level)}`}
+                          style={{ width: `${getStrengthWidth(passwordAnalysis.complexity.level)}%` }}
                         />
                       </div>
+                     {passwordAnalysis.complexity.feedback.length > 0 && (
+                        <div className="text-sm text-slate-500 mt-3">
+                          <p className="font-semibold mb-2"></p>
+                          {passwordAnalysis.complexity.feedback.map((message, index) => (
+                            <p key={index}>• {message}</p>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -232,13 +228,13 @@ export default function PasswordGenerator() {
                       value={[options.wordCount]}
                       onValueChange={(value) => setOptions((prev) => ({ ...prev, wordCount: value[0] }))}
                       min={2}
-                      max={4}
+                      max={6}
                       step={1}
                       className="w-full"
                     />
                     <div className="flex justify-between text-xs text-slate-500">
-                      <span>{t('generator.wordCountMin')}</span>
-                      <span>{t('generator.wordCountMax')}</span>
+                      <span>{t('generator.wordCountMin', { min: 2} )}</span>
+                      <span>{t('generator.wordCountMax', { max: 6} )}</span>
                     </div>
                   </div>
 
@@ -263,6 +259,17 @@ export default function PasswordGenerator() {
                       <Switch
                         checked={options.includeNumbers}
                         onCheckedChange={(checked) => handleOptionsChange({ includeNumbers: checked })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="space-y-1">
+                        <Label className="text-sm font-medium">{t('generator.includeSpecials')}</Label>
+                        <p className="text-xs text-slate-500">{t('generator.includeSpecialsDesc')}</p>
+                      </div>
+                      <Switch
+                        checked={options.includeSpecials}
+                        onCheckedChange={(checked) => handleOptionsChange({ includeSpecials: checked })}
                       />
                     </div>
                   </div>
@@ -329,19 +336,19 @@ export default function PasswordGenerator() {
                           </div>
                         </div>
 
-                        {/* Number Density */}
-                        {options.includeNumbers && (
+                        {/* Character Density */}
+                        {(options.includeNumbers || options.includeSpecials) && (
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium">{t('generator.numberDensity')}</Label>
+                            <Label className="text-sm font-medium">{t('generator.charDensity')}</Label>
                             <Slider
-                              value={[options.numberDensity * 100]}
-                              onValueChange={(value) => handleOptionsChange({ numberDensity: value[0] / 100 })}
+                              value={[options.characterDensity * 100]}
+                              onValueChange={(value) => handleOptionsChange({ characterDensity: value[0] / 100 })}
                               min={20}
                               max={100}
                               step={10}
                             />
                             <div className="text-xs text-slate-500">
-                              {Math.round(options.numberDensity * 100)}% {t('generator.numbersInWords')}
+                              {t('generator.charDensityDesc', { percent: Math.round(options.characterDensity * 100)} )}
                             </div>
                           </div>
                         )}
@@ -434,6 +441,7 @@ export default function PasswordGenerator() {
                               {entry.timestamp.toLocaleString()} • {t('generator.wordCountBadge', { count: entry.options.wordCount })}
                               {entry.options.includeCapitals && ` • ${t('generator.capitalLetters')}`}
                               {entry.options.includeNumbers && ` • ${t('generator.includeNumbers')}`}
+                              {entry.options.includeSpecials && ` • ${t('generator.includeSpecials')}`}
                             </div>
                           </div>
                           <Button

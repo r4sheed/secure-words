@@ -9,6 +9,7 @@ interface PasswordHistoryEntry {
     wordCount: number
     includeCapitals: boolean
     includeNumbers: boolean
+    includeSpecials: boolean
     wordCategory: string
   }
 }
@@ -24,6 +25,7 @@ export function usePasswordHistory() {
         wordCount: options.wordCount,
         includeCapitals: options.includeCapitals,
         includeNumbers: options.includeNumbers,
+        includeSpecials: options.includeSpecials,
         wordCategory: options.wordCategory,
       },
     }

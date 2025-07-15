@@ -1,8 +1,12 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { defaultLocale } from "@/i18n/config";
+import { defaultLocale } from "@/i18n/config"
 import { WORD_CATEGORIES, type WordCategory } from "@/lib/word-lists"
+
+// Character sets
+const SPECIAL_CHARS = "#!?%=@*$"
+const NUMBER_CHARS = "0123456789"
 
 // Normalize accents for consistent comparison
 const normalize = (word: string): string =>
@@ -12,10 +16,11 @@ interface PasswordOptions {
   wordCount: number
   includeCapitals: boolean
   includeNumbers: boolean
+  includeSpecials: boolean
   wordCategory: WordCategory
   minWordLength: number
   maxWordLength: number
-  numberDensity: number
+  characterDensity: number
   avoidSimilarWords: boolean
 }
 
@@ -25,12 +30,21 @@ export function usePasswordGenerator(options: PasswordOptions) {
 
   // Secure random number generator with fallback
   const getSecureRandom = useCallback((max: number): number => {
-    if (typeof window !== "undefined" && window.crypto && typeof window.crypto.getRandomValues === "function") {
-      const array = new Uint32Array(1)
-      crypto.getRandomValues(array)
-      return array[0] % max
+    if (
+      typeof window !== "undefined" &&
+      window.crypto &&
+      typeof window.crypto.getRandomValues === "function"
+    ) {
+      const range = 2 ** 32
+      const limit = range - (range % max)
+      let val: number
+      do {
+        const array = new Uint32Array(1)
+        window.crypto.getRandomValues(array)
+        val = array[0]
+      } while (val >= limit)
+      return val % max
     }
-    // Fallback for environments without crypto API
     return Math.floor(Math.random() * max)
   }, [])
 
@@ -38,17 +52,30 @@ export function usePasswordGenerator(options: PasswordOptions) {
   const getFilteredWords = useCallback((opts: PasswordOptions): string[] => {
     const words = WORD_CATEGORIES[defaultLocale][opts.wordCategory]
     const normalizedWords = words.map(normalize)
-    return normalizedWords.filter((word) => word.length >= opts.minWordLength && word.length <= opts.maxWordLength)
+    const filteredWords = normalizedWords.filter(
+      (word) => word.length >= opts.minWordLength && word.length <= opts.maxWordLength
+    )
+    if (filteredWords.length < 25) {
+      throw new Error(
+        `Word list too small (${filteredWords.length} words). Please choose a broader category or adjust length constraints.`
+      )
+    }
+    return filteredWords
   }, [])
 
-    // Simple similarity check based on first 2 characters and length
-    const areSimilar = useCallback((word1: string, word2: string, opts: PasswordOptions): boolean => {
+  // Check if two words are too similar
+  const areSimilar = useCallback(
+    (word1: string, word2: string, opts: PasswordOptions): boolean => {
       if (!opts.avoidSimilarWords) return false
+      return (
+        word1.substring(0, 2) === word2.substring(0, 2) &&
+        Math.abs(word1.length - word2.length) <= 1
+      )
+    },
+    []
+  )
 
-      return word1.substring(0, 2) === word2.substring(0, 2) && Math.abs(word1.length - word2.length) <= 1
-  }, [])
-
-  // Get random words with similarity checking
+  // Select random words with similarity checking
   const getRandomWords = useCallback(
     (count: number, opts: PasswordOptions): string[] => {
       const availableWords = getFilteredWords(opts)
@@ -62,16 +89,12 @@ export function usePasswordGenerator(options: PasswordOptions) {
       for (let attempts = 0; attempts < maxAttempts && words.length < count; attempts++) {
         const index = getSecureRandom(availableWords.length)
         const candidate = availableWords[index]
-
-        // Check if word is too similar to existing words
         const isSimilar = words.some((existingWord) => areSimilar(candidate, existingWord, opts))
-
         if (!isSimilar && !words.includes(candidate)) {
           words.push(candidate)
         }
       }
 
-      // If we couldn't find enough unique words, fill with random ones
       while (words.length < count) {
         const index = getSecureRandom(availableWords.length)
         const candidate = availableWords[index]
@@ -82,48 +105,75 @@ export function usePasswordGenerator(options: PasswordOptions) {
 
       return words
     },
-    [getFilteredWords, getSecureRandom, areSimilar],
+    [getFilteredWords, getSecureRandom, areSimilar]
   )
 
-  // Insert number at random position in word
-  const insertNumberInWord = useCallback(
-    (word: string): string => {
+  // Insert a random character from a set into a word
+  const insertRandomChar = useCallback(
+    (word: string, chars: string): string => {
       if (word.length <= 2) return word
-      const number = getSecureRandom(10)
-      const position = getSecureRandom(word.length - 2) + 1 // Not at start or end
-      return word.slice(0, position) + number + word.slice(position)
+      const char = chars[getSecureRandom(chars.length)]
+      const position = getSecureRandom(word.length - 2) + 1
+      return word.slice(0, position) + char + word.slice(position)
     },
-    [getSecureRandom],
+    [getSecureRandom]
   )
 
-  // Generate password
+  const insertNumberInWord = useCallback(
+    (word: string) => insertRandomChar(word, NUMBER_CHARS),
+    [insertRandomChar]
+  )
+
+  const insertSpecialInWord = useCallback(
+    (word: string) => insertRandomChar(word, SPECIAL_CHARS),
+    [insertRandomChar]
+  )
+
+  // Modify a subset of words based on density
+  const modifyRandomWords = useCallback(
+    (words: string[], density: number, modifyFn: (word: string) => string): string[] => {
+      const wordsToModify = Math.max(1, Math.floor(words.length * density))
+      const indices = new Set<number>()
+      while (indices.size < wordsToModify) {
+        indices.add(getSecureRandom(words.length))
+      }
+      const modifiedWords = [...words]
+      indices.forEach((index) => {
+        modifiedWords[index] = modifyFn(modifiedWords[index])
+      })
+      return modifiedWords
+    },
+    [getSecureRandom]
+  )
+
+  // Process words according to options
+  const processWords = useCallback(
+    (words: string[], opts: PasswordOptions): string => {
+      let processed = [...words]
+
+      if (opts.includeCapitals) {
+        processed = processed.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      }
+
+      if (opts.includeNumbers) {
+        processed = modifyRandomWords(processed, opts.characterDensity, insertNumberInWord)
+      }
+
+      if (opts.includeSpecials) {
+        processed = modifyRandomWords(processed, opts.characterDensity, insertSpecialInWord)
+      }
+
+      return processed.join("-")
+    },
+    [modifyRandomWords, insertNumberInWord, insertSpecialInWord]
+  )
+
+  // Generate a new password
   const generatePassword = useCallback((): string => {
     setIsGenerating(true)
-
     try {
       const words = getRandomWords(options.wordCount, options)
-      let processedWords = [...words]
-
-      // Apply capitalization
-      if (options.includeCapitals) {
-        processedWords = processedWords.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      }
-
-      // Apply numbers based on density
-      if (options.includeNumbers) {
-        const wordsToModify = Math.max(1, Math.floor(options.wordCount * options.numberDensity))
-        const indicesToModify = new Set<number>()
-
-        while (indicesToModify.size < wordsToModify) {
-          indicesToModify.add(getSecureRandom(options.wordCount))
-        }
-
-        indicesToModify.forEach((index) => {
-          processedWords[index] = insertNumberInWord(processedWords[index])
-        })
-      }
-
-      const newPassword = processedWords.join("-")
+      const newPassword = processWords(words, options)
       setPassword(newPassword)
       return newPassword
     } catch (error) {
@@ -132,43 +182,19 @@ export function usePasswordGenerator(options: PasswordOptions) {
     } finally {
       setIsGenerating(false)
     }
-  }, [options, getRandomWords, insertNumberInWord, getSecureRandom])
+  }, [options, getRandomWords, processWords])
 
-  // Update existing password with new options - FIXED VERSION
+  // Update password with new options
   const updatePasswordWithOptions = useCallback(
     (newOptions: PasswordOptions) => {
       if (!password) return
-
       setIsGenerating(true)
-
       try {
-        // Extract base words from current password
-        const words = password.split("-").map((word) => word.replace(/[0-9]/g, "").toLowerCase())
-
-        let processedWords = [...words]
-
-        // Apply capitalization based on NEW options
-        if (newOptions.includeCapitals) {
-          processedWords = processedWords.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        }
-
-        // Apply numbers based on NEW options
-        if (newOptions.includeNumbers) {
-          const wordsToModify = Math.max(1, Math.floor(words.length * newOptions.numberDensity))
-          const indicesToModify = new Set<number>()
-
-          while (indicesToModify.size < wordsToModify && indicesToModify.size < words.length) {
-            indicesToModify.add(getSecureRandom(words.length))
-          }
-
-          indicesToModify.forEach((index) => {
-            if (index < processedWords.length) {
-              processedWords[index] = insertNumberInWord(processedWords[index])
-            }
-          })
-        }
-
-        const updatedPassword = processedWords.join("-")
+        const charsToRemove = `${SPECIAL_CHARS}${NUMBER_CHARS}`
+        const words = password.split("-").map((word) =>
+          word.replace(new RegExp(`[${charsToRemove}]`, "g"), "").toLowerCase()
+        )
+        const updatedPassword = processWords(words, newOptions)
         setPassword(updatedPassword)
       } catch (error) {
         console.error("Error updating password:", error)
@@ -176,7 +202,7 @@ export function usePasswordGenerator(options: PasswordOptions) {
         setIsGenerating(false)
       }
     },
-    [password, insertNumberInWord, getSecureRandom],
+    [password, processWords]
   )
 
   return {
