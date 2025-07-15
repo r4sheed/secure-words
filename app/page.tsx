@@ -202,14 +202,14 @@ export default function PasswordGenerator() {
                           style={{ width: `${getStrengthWidth(passwordAnalysis.complexity.level)}%` }}
                         />
                       </div>
-                     {passwordAnalysis.complexity.feedback.length > 0 && (
+{/*                      {passwordAnalysis.complexity.feedback.length > 0 && (
                         <div className="text-sm text-slate-500 mt-3">
                           <p className="font-semibold mb-2"></p>
                           {passwordAnalysis.complexity.feedback.map((message, index) => (
                             <p key={index}>• {message}</p>
                           ))}
                         </div>
-                      )}
+                      )} */}
                     </div>
                   )}
                 </div>
