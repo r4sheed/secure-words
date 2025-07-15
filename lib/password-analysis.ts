@@ -21,11 +21,11 @@ export interface PasswordComplexity {
  * Configuration for strength levels, mapping to visual properties.
  */
 const STRENGTH_CONFIG: Record<PasswordComplexity["level"], { color: string; width: number }> = {
-  weak: { color: "red", width: 20 },
-  fair: { color: "yellow", width: 40 },
-  good: { color: "blue", width: 60 },
-  strong: { color: "green", width: 80 },
-  excellent: { color: "pink", width: 100 },
+  weak: { color: "bg-red-500", width: 20 },
+  fair: { color: "bg-yellow-500", width: 40 },
+  good: { color: "bg-blue-500", width: 60 },
+  strong: { color: "bg-green-500", width: 80 },
+  excellent: { color: "bg-pink-500", width: 100 },
 };
 
 /**
@@ -260,7 +260,7 @@ export function getPasswordComplexity(password: string): PasswordComplexity {
  * @returns The corresponding color class.
  */
 export function getStrengthColor(level: PasswordComplexity["level"]): string {
-  return `bg-${STRENGTH_CONFIG[level]?.color}-500`;
+  return STRENGTH_CONFIG[level]?.color ?? 'bg-red-500';
 }
 
 /**
